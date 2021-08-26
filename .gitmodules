@@ -1,0 +1,12 @@
+[submodule "dependencies/glfw"]
+	path = dependencies/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "dependencies/imgui"]
+	path = dependencies/imgui
+	url = git@github.com:straightcurve/imgui.git
+[submodule "dependencies/spdlog"]
+	path = dependencies/spdlog
+	url = git@github.com:gabime/spdlog.git
+[submodule "dependencies/glm"]
+	path = dependencies/glm
+	url = git@github.com:g-truc/glm.git
