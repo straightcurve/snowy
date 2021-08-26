@@ -10,12 +10,18 @@ namespace Snow::Engine {
     static bool s_glad_initialized;
 
     Window::Window() {
+        glfwSetErrorCallback([](int error, const char *description) {
+            SNOW_CORE_ERROR("GLFW error %d: %s", error, description);
+        });
+
         if (!s_glfw_initialized) {
             s_glfw_initialized = glfwInit();
             SNOW_CORE_ASSERT(s_glfw_initialized, "Failed to initialize GLFW..");
         }
 
         m_window = glfwCreateWindow(1280, 720, "Snow", nullptr, nullptr);
+        SNOW_CORE_ASSERT(m_window != nullptr, "Unable to create GLFW window!");
+
         glfwMakeContextCurrent(m_window);
         glfwSetWindowUserPointer(m_window, &m_callbacks);
         set_vsync(m_vsync);
@@ -27,7 +33,13 @@ namespace Snow::Engine {
         });
 
         s_glad_initialized = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
-        SNOW_CORE_ASSERT(s_glad_initialized, "Failed to initialize graphics API..");
+        if (!s_glad_initialized) {
+            SNOW_CORE_ERROR("Failed to initialize glad..");
+            glfwDestroyWindow(m_window);
+            glfwTerminate();
+
+            return;
+        }
 
         update_viewport_size();
     }
@@ -54,10 +66,12 @@ namespace Snow::Engine {
 
         glfwPollEvents();
 
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
-                     clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glfwSwapBuffers(m_window);
+
+//        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+//        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
+//                     clear_color.w);
+//        glClear(GL_COLOR_BUFFER_BIT);
     }
 
     void Window::on_window_closed(std::function<void()> callback) {
