@@ -12,8 +12,8 @@ file(GLOB SOURCES
         src/**/*.cpp
         src/*.h
         src/*.cpp
-        dependencies/stb/*.cpp
-        dependencies/stb/*.h
+#        dependencies/stb/*.cpp
+#        dependencies/stb/*.h
         )
 
 add_executable(snowy ${SOURCES})
